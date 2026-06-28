@@ -1,6 +1,5 @@
-# Accessible Reading List — Frontend (Assignment 2)
+# Accessible Reading List — Frontend
 
-**Course:** STIWK2124 Web Engineering | Semester A252 – Feb 2025/2026  
 **Stack:** Angular 17 · TypeScript · HttpClient · Reactive Forms
 
 ---
