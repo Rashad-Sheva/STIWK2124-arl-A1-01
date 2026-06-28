@@ -16,7 +16,20 @@ Accessible Reading List (ARL) web app that is able to store and serve book entri
 - Proper HTTP Status Codes
 - MySQL Database with JPA
 
-## How to Run
+
+## API Endpoints Used
+
+| Method | Endpoint              | Auth Required | Description          |
+|--------|-----------------------|---------------|----------------------|
+| GET    | `/api/books`          | No            | List (paginated)     |
+| GET    | `/api/books?q=...`    | No            | Search               |
+| GET    | `/api/books/:id`      | No            | Single book          |
+| POST   | `/api/books`          | Yes (Basic)   | Create book          |
+| PUT    | `/api/books/:id`      | Yes (Basic)   | Update book          |
+| DELETE | `/api/books/:id`      | Yes (Basic)   | Delete book          |
+
+
+## Setup Backend
 
 1. **Database**: Run `schema.sql` in MySQL Workbench
 2. **Start Backend**:
