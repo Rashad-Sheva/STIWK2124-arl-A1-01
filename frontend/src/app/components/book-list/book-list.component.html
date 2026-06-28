@@ -1,0 +1,118 @@
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">📖 Book List</h1>
+      <p class="page-subtitle" *ngIf="pageData">
+        {{ pageData.totalElements }} book{{ pageData.totalElements !== 1 ? 's' : '' }} in the library
+      </p>
+    </div>
+    <a routerLink="/books/new" class="btn btn-primary">+ Add Book</a>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by title or author..."
+        [(ngModel)]="searchKeyword"
+        (input)="onSearchInput(searchKeyword)"
+        aria-label="Search books"
+      />
+      <button *ngIf="searchKeyword" class="clear-btn" (click)="clearSearch()" aria-label="Clear search">✕</button>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div *ngIf="successMessage" class="alert alert-success" role="alert">✅ {{ successMessage }}</div>
+  <div *ngIf="errorMessage"   class="alert alert-error"   role="alert">⚠️ {{ errorMessage }}</div>
+  <div *ngIf="speaking"       class="alert alert-info"    role="status">
+    🔊 Reading aloud...
+    <button class="btn btn-sm" (click)="stopReading()">Stop</button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <span>Loading books...</span>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && !errorMessage && books.length === 0" class="empty-state">
+    <div class="empty-icon">📭</div>
+    <p *ngIf="!searchKeyword">No books yet. <a routerLink="/books/new">Add your first book!</a></p>
+    <p *ngIf="searchKeyword">
+      No results for "<strong>{{ searchKeyword }}</strong>".
+      <button class="link-btn" (click)="clearSearch()">Clear search</button>
+    </p>
+  </div>
+
+  <!-- Book cards grid -->
+  <div *ngIf="!loading && books.length > 0" class="book-grid">
+    <div *ngFor="let book of books" class="book-card">
+
+      <div class="card-top">
+        <span class="category-badge">{{ book.category || 'Uncategorised' }}</span>
+        <div class="card-actions">
+          <button
+            class="icon-btn"
+            title="Read Aloud"
+            aria-label="Read this book aloud"
+            (click)="readAloud(book)">🔊</button>
+          <a
+            class="icon-btn"
+            title="Edit"
+            aria-label="Edit book"
+            [routerLink]="['/books/edit', book.id]">✏️</a>
+          <button
+            class="icon-btn icon-btn-danger"
+            title="Delete"
+            aria-label="Delete book"
+            (click)="deleteBook(book.id, book.title)">🗑️</button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <h3 class="book-title">{{ book.title }}</h3>
+        <p class="book-author">by {{ book.author }}</p>
+        <p *ngIf="book.description" class="book-desc">{{ book.description }}</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="pageData && pageData.totalPages > 1" class="pagination">
+
+    <button
+      class="page-btn"
+      [disabled]="pageData.first"
+      (click)="goToPage(currentPage - 1)"
+      aria-label="Previous page">← Prev</button>
+
+    <button
+      *ngFor="let p of pageNumbers"
+      class="page-btn"
+      [class.page-btn-active]="p === currentPage"
+      (click)="goToPage(p)"
+      [attr.aria-label]="'Page ' + (p + 1)"
+      [attr.aria-current]="p === currentPage ? 'page' : null">{{ p + 1 }}</button>
+
+    <button
+      class="page-btn"
+      [disabled]="pageData.last"
+      (click)="goToPage(currentPage + 1)"
+      aria-label="Next page">Next →</button>
+
+  </div>
+
+  <p *ngIf="pageData && pageData.totalElements > 0" class="pagination-info">
+    Page {{ currentPage + 1 }} of {{ pageData.totalPages }}
+    &nbsp;·&nbsp; Showing {{ books.length }} of {{ pageData.totalElements }} books
+  </p>
+
+</div>

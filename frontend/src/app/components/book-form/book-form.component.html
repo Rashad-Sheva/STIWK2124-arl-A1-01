@@ -1,0 +1,120 @@
+<div class="page-container page-container-sm">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ isEditMode ? '✏️ Edit Book' : '➕ Add New Book' }}</h1>
+      <p class="page-subtitle">{{ isEditMode ? 'Update the book details below.' : 'Fill in the details to add a new book.' }}</p>
+    </div>
+    <a routerLink="/books" class="btn btn-secondary">← Back to List</a>
+  </div>
+
+  <!-- Loading (edit mode: fetching book data) -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <span>Loading book data...</span>
+  </div>
+
+  <!-- Success -->
+  <div *ngIf="successMessage" class="alert alert-success" role="alert">✅ {{ successMessage }}</div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="alert alert-error" role="alert">⚠️ {{ errorMessage }}</div>
+
+  <!-- Form -->
+  <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="book-form" aria-label="Book form">
+
+    <!-- Title -->
+    <div class="form-group" [class.form-group-error]="isInvalid('title')">
+      <label for="title" class="form-label">
+        Title <span class="required-star" aria-hidden="true">*</span>
+      </label>
+      <input
+        id="title"
+        type="text"
+        class="form-control"
+        formControlName="title"
+        placeholder="e.g. Clean Code"
+        aria-required="true"
+        [attr.aria-invalid]="isInvalid('title')"
+        aria-describedby="title-error"
+      />
+      <div id="title-error" class="form-error" *ngIf="isInvalid('title')" role="alert">
+        <span *ngIf="title.errors?.['required']">Title is required.</span>
+        <span *ngIf="title.errors?.['maxlength']">Title must be at most 255 characters.</span>
+      </div>
+    </div>
+
+    <!-- Author -->
+    <div class="form-group" [class.form-group-error]="isInvalid('author')">
+      <label for="author" class="form-label">
+        Author <span class="required-star" aria-hidden="true">*</span>
+      </label>
+      <input
+        id="author"
+        type="text"
+        class="form-control"
+        formControlName="author"
+        placeholder="e.g. Robert C. Martin"
+        aria-required="true"
+        [attr.aria-invalid]="isInvalid('author')"
+        aria-describedby="author-error"
+      />
+      <div id="author-error" class="form-error" *ngIf="isInvalid('author')" role="alert">
+        <span *ngIf="author.errors?.['required']">Author is required.</span>
+        <span *ngIf="author.errors?.['maxlength']">Author must be at most 255 characters.</span>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="form-group" [class.form-group-error]="isInvalid('category')">
+      <label for="category" class="form-label">Category</label>
+      <select
+        id="category"
+        class="form-control form-select"
+        formControlName="category"
+        aria-describedby="category-error">
+        <option value="">— Select a category —</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+      <div id="category-error" class="form-error" *ngIf="isInvalid('category')" role="alert">
+        <span *ngIf="category.errors?.['maxlength']">Category must be at most 100 characters.</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group" [class.form-group-error]="isInvalid('description')">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        id="description"
+        class="form-control form-textarea"
+        formControlName="description"
+        placeholder="A short summary of the book..."
+        rows="4"
+        [attr.aria-invalid]="isInvalid('description')"
+        aria-describedby="description-error description-hint"
+      ></textarea>
+      <div id="description-hint" class="form-hint">
+        {{ description.value?.length || 0 }} / 500 characters
+      </div>
+      <div id="description-error" class="form-error" *ngIf="isInvalid('description')" role="alert">
+        <span *ngIf="description.errors?.['maxlength']">Description must be at most 500 characters.</span>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="form-actions">
+      <a routerLink="/books" class="btn btn-secondary">Cancel</a>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="submitting"
+        [attr.aria-busy]="submitting">
+        <span *ngIf="!submitting">{{ isEditMode ? 'Update Book' : 'Add Book' }}</span>
+        <span *ngIf="submitting">{{ isEditMode ? 'Updating...' : 'Adding...' }}</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>

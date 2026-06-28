@@ -1,0 +1,16 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+dist/
+.angular/
+
+# IDE
+.idea/
+.vscode/
+*.suo
+
+# OS
+.DS_Store
+Thumbs.db
